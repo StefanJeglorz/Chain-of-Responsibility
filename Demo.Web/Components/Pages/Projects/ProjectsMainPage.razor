@@ -1,5 +1,5 @@
 ﻿@page "/projects"
-
+@using Demo.Shared.DTOs;
 <PageTitle>Projects</PageTitle>
 
 <FluentHeader>
@@ -7,5 +7,29 @@
 </FluentHeader>
 
 <FluentBodyContent>
-    
+    <div style="height:100%; overflow: auto;">
+        <FluentDataGrid GenerateHeader="GenerateHeaderOption.Sticky" Items="@projects">
+            <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Title)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Description)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Number)" Sortable="true" />
+        </FluentDataGrid>
+    </div>
 </FluentBodyContent>
+
+@code {
+    IQueryable<ProjectDTO> projects;
+    protected override void OnInitialized()
+    {
+        List<ProjectDTO> data = new ();
+        for(int i = 0; i < 100; i++)
+        {
+             data.Add(new ProjectDTO(i, $"Project {i}", @"""Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+                                                                At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+                                                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
+                                                                At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.""", i));
+        }   
+        projects = data.AsQueryable();
+        base.OnInitialized();
+    }
+}

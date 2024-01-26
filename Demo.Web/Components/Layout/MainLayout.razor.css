@@ -1,10 +1,18 @@
 .page {
     position: relative;
     display: flex;
+    width: 100%;
 }
 
 main {
     flex: 1;
+    display: flex;
+}
+
+article {
+    display: flex;
+    flex:1;
+    flex-direction: column;
 }
 
 .sidebar {
