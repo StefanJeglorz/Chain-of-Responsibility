@@ -1,5 +1,7 @@
 using Demo.Web.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Demo.Models;
+using Demo.Business;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddFluentUIComponents();
+builder.Services.AddModelsServices(builder.Configuration);
+builder.Services.AddBusinessServices();
 
 var app = builder.Build();
 

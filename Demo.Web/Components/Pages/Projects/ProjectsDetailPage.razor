@@ -1,0 +1,37 @@
+﻿@page "/projects/{ProjectId:int}"
+@using Demo.Business.Projects
+@using Demo.Shared.DTOs;
+@inject IProjectAPI api
+
+<PageTitle>Projects</PageTitle>
+
+<FluentHeader>
+    Projects - @project
+</FluentHeader>
+
+<FluentBodyContent>
+    <div style="height:100%; overflow: auto;">
+    </div>
+</FluentBodyContent>
+
+@code {
+    ProjectDTO project;
+
+    [Parameter]
+    public int ProjectId { get; set; } = 0;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadData();
+        await base.OnParametersSetAsync();
+    }
+
+    private async Task LoadData()
+    {
+        project = await api.GetProjectAsync(ProjectId);
+        if(project.Status == Shared.Enums.DTOStatus.Broken)
+        {
+            await api.RepairAsync(project.Id);
+        }
+    }
+}

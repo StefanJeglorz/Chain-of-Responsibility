@@ -1,4 +1,7 @@
-﻿namespace Demo.Shared.DTOs;
+﻿using Demo.Shared.Enums;
+using System.ComponentModel.DataAnnotations;
+
+namespace Demo.Shared.DTOs;
 
 public class ProjectDTO
 {
@@ -16,7 +19,18 @@ public class ProjectDTO
     }
 
     public int Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
+    [StringLength(50)]
+    public string? Title { get; set; }
+    public string? Description { get; set; }
     public int Number { get; set; }
+
+    public ProjectPlanningDTO Planning { get; set; }
+
+    public DTOStatus Status { get; set; }
+
+
+    public override string ToString()
+    {
+        return $"{Number} - {Title}";
+    }
 }

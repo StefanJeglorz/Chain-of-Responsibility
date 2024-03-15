@@ -1,14 +1,19 @@
 ﻿@page "/projects"
+@using Demo.Business.Projects
 @using Demo.Shared.DTOs;
+@inject IProjectAPI api
+@inject NavigationManager navigationManager
+
 <PageTitle>Projects</PageTitle>
 
 <FluentHeader>
     Projects
+    <FluentButton Loading=loading IconEnd="@(new Icons.Regular.Size20.ProjectionScreen())" OnClick=AddBrokenProject Appearance=Appearance.Lightweight Style="margin-left:auto">Add new broken project</FluentButton>
 </FluentHeader>
 
 <FluentBodyContent>
     <div style="height:100%; overflow: auto;">
-        <FluentDataGrid GenerateHeader="GenerateHeaderOption.Sticky" Items="@projects">
+        <FluentDataGrid TGridItem=ProjectDTO OnRowFocus=OnRowFocused GenerateHeader="GenerateHeaderOption.Sticky" Items="@projects">
             <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Title)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Description)" Sortable="true" />
@@ -19,17 +24,28 @@
 
 @code {
     IQueryable<ProjectDTO> projects;
-    protected override void OnInitialized()
+    bool loading = false;
+    protected override async Task OnInitializedAsync()
     {
-        List<ProjectDTO> data = new ();
-        for(int i = 0; i < 100; i++)
-        {
-             data.Add(new ProjectDTO(i, $"Project {i}", @"""Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                                                                At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
-                                                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. 
-                                                                At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.""", i));
-        }   
-        projects = data.AsQueryable();
+        await LoadData();
         base.OnInitialized();
+    }
+
+    private async Task LoadData()
+    {
+        projects = (await api.GetProjectsAsync()).AsQueryable();
+    }
+
+    private async Task AddBrokenProject()
+    {
+        loading = true;
+        await api.AddBrokenProjectAsync();
+        await LoadData();
+        loading = false;
+    }
+
+    private void OnRowFocused(FluentDataGridRow<ProjectDTO> row)
+    {
+        navigationManager.NavigateTo($"/projects/{row.Item?.Id}");
     }
 }
