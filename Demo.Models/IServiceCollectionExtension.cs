@@ -10,7 +10,8 @@ namespace Demo.Models
         {
             return services.AddDbContext<ICORDataLayer, CORDBContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("Default"));
+                options.UseInMemoryDatabase("Demo");
+                // options.UseSqlServer(configuration.GetConnectionString("Default"));
             });
         }
     }

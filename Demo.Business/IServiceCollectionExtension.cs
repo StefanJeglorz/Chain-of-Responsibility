@@ -13,17 +13,8 @@ namespace Demo.Business
             services.AddScoped<IProjectAPI, ProjectAPI>().AddKeyedScoped<IValidator, ProjectValidator>(nameof(Project));
 
             services.Chain<IChainHandler>(Chains.RepairProjectChain)
-                    .Add<Handler1>()
-                    .Add<Handler2>()
-                    .Add<Handler3>()
-                    .Add<Handler4>()
-                    .Configure();
-
-            services.Chain<IChainHandler>(Chains.DemoChain2)
-                    .Add<Handler3>()
-                    .Add<Handler4>()
-                    .Add<Handler1>()
-                    .Add<Handler2>()
+                    .Add<CheckAndRepairProjectNumberHandler>()
+                    .Add<CheckAndRepairProjectPlanningHandler>()
                     .Configure();
 
             return services;

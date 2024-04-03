@@ -1,19 +1,12 @@
 ﻿namespace Demo.Business.ChainHandler.Shared
 {
-    internal class ChainHandlerBase : IChainHandler
+    internal class ChainHandlerBase(IChainHandler next) : IChainHandler
     {
-        public IChainHandler Next { get; }
-
-        public ChainHandlerBase(IChainHandler next)
+        public virtual async Task HandleAsync(int id)
         {
-            Next = next;
-        }
-
-        public async Task HandleAsync(int id)
-        {
-            if (Next is not null)
+            if (next is not null)
             {
-                await Next.HandleAsync(id);
+                await next.HandleAsync(id);
             }
         }
     }
