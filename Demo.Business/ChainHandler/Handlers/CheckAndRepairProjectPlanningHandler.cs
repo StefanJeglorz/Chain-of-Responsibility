@@ -1,12 +1,10 @@
-using System.Xml;
 using Demo.Business.ChainHandler.Shared;
 using Demo.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Demo.Business.ChainHandler.Handlers;
 
-internal class CheckAndRepairProjectPlanningHandler(IChainHandler next, ICORDataLayer dbContext)
-    : ChainHandlerBase(next)
+internal class CheckAndRepairProjectPlanningHandler(IChainHandler next, ICORDataLayer dbContext): ChainHandlerBase(next)
 {
     public override async Task HandleAsync(int id)
     {
@@ -15,8 +13,9 @@ internal class CheckAndRepairProjectPlanningHandler(IChainHandler next, ICORData
         {
             if (project.Planning is null)
             {
+                project.Planning = new ProjectPlanning();
+                await dbContext.SaveChangesAsync();
             }
-
             await base.HandleAsync(id);
         }
     }
